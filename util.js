@@ -9,7 +9,7 @@ function repeat (ch, sz) {
 function idFromName (id) {
   return id.toLowerCase()
     .replace(/\s/g, '_')
-    .replace(/[^\w]/gi, '')
+    .replace(/[^[aA-zZаА-яЯ]]]/gi, '')
 }
 
 

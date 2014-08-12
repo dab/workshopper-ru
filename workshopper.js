@@ -25,32 +25,32 @@ function Workshopper (options) {
     , exercise
 
   if (typeof options != 'object')
-    throw new TypeError('need to provide an options object')
+    throw new TypeError('необходимо предоставить объект с параметрами')
 
   if (typeof options.name != 'string')
-    throw new TypeError('need to provide a `name` String option')
+    throw new TypeError('необходимо указать строковой параметр `name`')
 
   if (typeof options.title != 'string')
-    throw new TypeError('need to provide a `title` String option')
+    throw new TypeError('необходимо указать строковой параметр `title`')
 
   if (typeof options.exerciseDir != 'string')
     options.exerciseDir = path.join(options.appDir, 'exercises')
 
   stat = fs.statSync(options.exerciseDir)
   if (!stat || !stat.isDirectory())
-    throw new Error('"exerciseDir" [' + options.exerciseDir + '] does not exist or is not a directory')
+    throw new Error('"exerciseDir" [' + options.exerciseDir + '] не существует или не является директорией')
 
   if (typeof options.appDir != 'string')
-    throw new TypeError('need to provide an "appDir" String option')
+    throw new TypeError('необходимо указать строковой параметр `appDir`')
 
   stat = fs.statSync(options.appDir)
   if (!stat || !stat.isDirectory())
-    throw new Error('"appDir" [' + options.appDir + '] does not exist or is not a directory')
+    throw new Error('"appDir" [' + options.appDir + '] не существует или не является директорией')
 
   menuJson = path.join(options.exerciseDir, 'menu.json')
   stat = fs.statSync(menuJson)
   if (!stat || !stat.isFile())
-    throw new Error('[' + menuJson + '] does not exist or is not a file')
+    throw new Error('[' + menuJson + '] не существует или не является файлом')
 
 
   this.appName     = options.name
@@ -139,10 +139,10 @@ function Workshopper (options) {
     exercise = this.current && this.loadExercise(this.current)
 
     if (!this.current)
-      return error('No active exercise. Select one from the menu.')
+      return error('Нет активного задания. Выберите нужное задание в меню.')
 
     if (!exercise)
-      return error('No such exercise: ' + name)
+      return error('Такого упражнения не существует: ' + name)
 
     if (exercise.requireSubmission !== false && argv._.length == 1)
       return error('Usage:', this.appName, argv._[0], 'mysubmission.js')
@@ -152,7 +152,7 @@ function Workshopper (options) {
 
   if (argv._[0] == 'reset') {
     this.reset()
-    return console.log(this.title + ' progress reset')
+    return console.log(this.title + ' сброс состояния')
   }
 
   this.printMenu()
@@ -162,7 +162,7 @@ function Workshopper (options) {
 Workshopper.prototype.end = function (mode, pass, exercise, callback) {
   exercise.end(mode, pass, function (err) {
     if (err)
-      return error('Error cleaning up:' + (err.message || err))
+      return error('Не удалось очистить:' + (err.message || err))
 
     setImmediate(callback || function () {
       process.exit(pass ? 0 : -1)
@@ -174,7 +174,7 @@ Workshopper.prototype.end = function (mode, pass, exercise, callback) {
 // overall exercise fail
 Workshopper.prototype.exerciseFail = function (mode, exercise) {
   console.log('\n' + chalk.bold.red('# FAIL') + '\n')
-  console.log('Your solution to ' + exercise.name + ' didn\'t pass. Try again!\n')
+  console.log('Ваше решение к ' + exercise.name + ' не верное. Пробуйте еще!\n')
 
   this.end(mode, false, exercise)
 }
@@ -183,7 +183,7 @@ Workshopper.prototype.exerciseFail = function (mode, exercise) {
 // overall exercise pass
 Workshopper.prototype.exercisePass = function (mode, exercise) {
   console.log('\n' + chalk.bold.green('# PASS') + '\n')
-  console.log(chalk.bold('Your solution to ' + exercise.name + ' passed!') + '\n')
+  console.log(chalk.bold('Ваше решение к заданию `' + exercise.name + '` правильное!') + '\n')
 
   var done = function done () {
     var completed = this.getData('completed') || []
@@ -204,16 +204,14 @@ Workshopper.prototype.exercisePass = function (mode, exercise) {
       if (this.onComplete)
         return this.onComplete(this.end.bind(this, mode, true, exercise))
       else
-        console.log('You\'ve finished all the challenges! Hooray!\n')
+        console.log('Вы завершили все задания! Ура!\n')
     } else {
       console.log(
-          'You have '
+          'Осталось '
         + remaining
-        + ' challenge'
-        + (remaining != 1 ? 's' : '')
-        + ' left.'
+        + ' заданий'
       )
-      console.log('Type `' + this.appName + '` to show the menu.\n')
+      console.log('Наберите `' + this.appName + '` для показа меню.\n')
     }
 
     this.end(mode, true, exercise)
@@ -290,7 +288,7 @@ Workshopper.prototype.execute = function (exercise, mode, args) {
     if (err) {
       // if there was an error then we need to do this after cleanup
       errback = function () {
-        error('Could not ' + mode + ': ' + (err.message || err))
+        error('Не получается ' + mode + ': ' + (err.message || err))
       }
     }
 
@@ -430,12 +428,12 @@ Workshopper.prototype.loadExercise = function (name) {
   stat = fs.statSync(meta.exerciseFile)
 
   if (!stat || !stat.isFile())
-    return error('ERROR:', meta.exerciseFile, 'does not exist!')
+    return error('ERROR:', meta.exerciseFile, ' не существует!')
 
   exercise = require(meta.exerciseFile)
 
   if (!exercise || typeof exercise.init != 'function')
-    return error('ERROR:', meta.exerciseFile, 'is not a workshopper exercise')
+    return error('ERROR:', meta.exerciseFile, 'не является упражнением workshopper')
 
   exercise.init(this, meta.id, meta.name, meta.dir, meta.number)
 
@@ -453,13 +451,13 @@ function onselect (name) {
   var exercise = this.loadExercise(name)
 
   if (!exercise)
-    return error('No such exercise: ' + name)
+    return error('Не существует задания: ' + name)
 
   console.log(
       '\n ' + chalk.green.bold(this.title)
     + '\n' + chalk.green.bold(util.repeat('\u2500', chalk.stripColor(this.title).length + 2))
     + '\n ' + chalk.yellow.bold(exercise.name)
-    + '\n ' + chalk.yellow.italic('Exercise', exercise.number, 'of', this.exercises.length)
+    + '\n ' + chalk.yellow.italic('Задание', exercise.number, 'из', this.exercises.length)
     + '\n'
   )
 

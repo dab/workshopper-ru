@@ -24,7 +24,7 @@ function showMenu (opts) {
     
   opts.exercises.forEach(function (name) {
     var isDone = opts.completed.indexOf(name) >= 0
-      , m      = '[COMPLETED]'
+      , m      = '[Выполнено]'
 
     name = name
 
@@ -36,28 +36,28 @@ function showMenu (opts) {
   })
 
   menu.write(util.repeat('\u2500', opts.width) + '\n')
-  menu.add(chalk.bold('HELP'))
+  menu.add(chalk.bold('Помощь'))
 
   if (opts.extras) {
     opts.extras.forEach(function (extra) {
-      menu.add(chalk.bold(extra.toUpperCase()))
+      menu.add(chalk.bold(extra))
     })
   }
 
-  menu.add(chalk.bold('EXIT'))
+  menu.add(chalk.bold('Выход'))
 
   menu.on('select', function (label) {
     var name = chalk.stripColor(label)
-                .replace(/(^»?\s+)|(\s+(\[COMPLETED\])?$)/g, '')
+                .replace(/(^»?\s+)|(\s+(\[Выполнено\])?$)/g, '')
 
     menu.y = 0
     menu.reset()
     menu.close()
 
-    if (name === 'EXIT')
+    if (name === 'Выход')
       return emitter.emit('exit')
 
-    if (name === 'HELP')
+    if (name === 'Помощь')
       return emitter.emit('help')
 
     if (opts.extras && opts.extras.indexOf(name.toLowerCase()) != -1)
