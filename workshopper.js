@@ -456,7 +456,7 @@ function onselect (name) {
   console.log(
       '\n ' + chalk.green.bold(this.title)
     + '\n' + chalk.green.bold(util.repeat('\u2500', chalk.stripColor(this.title).length + 2))
-    + '\n ' + chalk.yellow.bold(exercise.name)
+    + '\n ' + chalk.magenta.bold(exercise.name)
     + '\n ' + chalk.yellow.italic('Задание', exercise.number, 'из', this.exercises.length)
     + '\n'
   )
