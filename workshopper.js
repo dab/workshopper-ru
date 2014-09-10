@@ -152,7 +152,7 @@ function Workshopper (options) {
 
   if (argv._[0] == 'reset') {
     this.reset()
-    return console.log(this.title + ' сброс состояния')
+    return console.log(this.title + ': сброс состояния')
   }
 
   this.printMenu()
